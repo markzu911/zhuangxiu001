@@ -190,7 +190,7 @@ const App: React.FC = () => {
             </section>
 
             <section className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-              <h2 className="text-lg font-bold text-stone-900 mb-6 font-serif-sc">2. 空间类型</h2>
+              <h2 className="text-lg font-bold text-stone-900 mb-6 font-serif-sc">2. 空间类型1</h2>
               <select 
                 value={selectedRoom}
                 onChange={(e) => {
