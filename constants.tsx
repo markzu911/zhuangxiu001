@@ -5,12 +5,14 @@ export const CHINESE_STYLES = [
   {
     id: ChineseStyle.NEW_CHINESE,
     name: '新中式',
+    keywords: '关键词1',
     description: '将现代舒适感与传统的审美线条、材质完美融合。',
     preview: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&q=80&w=400'
   },
   {
     id: ChineseStyle.CLASSICAL,
     name: '古典中式',
+    keywords: '关键词2',
     description: '精致的木雕、花窗隔断和厚重的传统色调。',
     preview: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=400'
   },

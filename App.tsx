@@ -26,10 +26,61 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
   const [hasApiKey, setHasApiKey] = useState<boolean>(true);
+
+  // SaaS Integration State
+  const [userId, setUserId] = useState<string | null>(null);
+  const [toolId, setToolId] = useState<string | null>(null);
+  const [userIntegral, setUserIntegral] = useState<number | null>(null);
+  const [toolIntegral, setToolIntegral] = useState<number | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
   
   // API Key Selection State
   const [hasSelectedKey, setHasSelectedKey] = useState<boolean>(false);
   const [isCheckingKey, setIsCheckingKey] = useState<boolean>(true);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'SAAS_INIT') {
+        const { userId: rawUserId, toolId: rawToolId } = event.data;
+        
+        // Filter out "null" or "undefined" strings as per API_SPEC.md
+        const cleanUserId = (rawUserId === "null" || rawUserId === "undefined") ? null : rawUserId;
+        const cleanToolId = (rawToolId === "null" || rawToolId === "undefined") ? null : rawToolId;
+        
+        if (cleanUserId) setUserId(cleanUserId);
+        if (cleanToolId) setToolId(cleanToolId);
+        
+        console.log("SaaS Init received:", { userId: cleanUserId, toolId: cleanToolId });
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  useEffect(() => {
+    const launchTool = async () => {
+      if (!userId || !toolId) return;
+
+      try {
+        const response = await fetch('/api/tool/launch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, toolId })
+        });
+        const result = await response.json();
+        if (result.success) {
+          setUserIntegral(result.data.user.integral);
+          setToolIntegral(result.data.tool.integral);
+          setUserName(result.data.user.name);
+        }
+      } catch (err) {
+        console.error("Failed to launch tool:", err);
+      }
+    };
+
+    launchTool();
+  }, [userId, toolId]);
 
   useEffect(() => {
     const checkKey = async () => {
@@ -69,6 +120,21 @@ const App: React.FC = () => {
     setIsProcessing(true);
     setError(null);
     try {
+      // Step 2: Verify Integral (if SaaS integrated)
+      if (userId && toolId) {
+        const verifyRes = await fetch('/api/tool/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, toolId })
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success) {
+          setError(verifyData.message || "积分不足");
+          setIsProcessing(false);
+          return;
+        }
+      }
+
       const resultUrl = await transformRoomImage(selectedImage, selectedStyle, selectedRoom, imageAspectRatio, (status) => {
         // Optional: you could add a progress state here if you want to show it in the UI
       });
@@ -78,6 +144,19 @@ const App: React.FC = () => {
         resultUrl,
         timestamp: Date.now()
       });
+
+      // Step 3: Consume Integral (if SaaS integrated)
+      if (userId && toolId) {
+        const consumeRes = await fetch('/api/tool/consume', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, toolId })
+        });
+        const consumeData = await consumeRes.json();
+        if (consumeData.success) {
+          setUserIntegral(consumeData.data.currentIntegral);
+        }
+      }
     } catch (err: any) {
       console.error(err);
       const errorMessage = err.message || String(err);
@@ -167,7 +246,7 @@ const App: React.FC = () => {
           {/* Controls Sidebar */}
           <div className="lg:col-span-4 space-y-8 order-2 lg:order-1">
             <section className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-              <h2 className="text-lg font-bold text-stone-900 mb-6 font-serif-sc">1. 选择装修风格</h2>
+              <h2 className="text-lg font-bold text-stone-900 mb-6 font-serif-sc">1. 选择装修风格A</h2>
               <div className="grid grid-cols-2 gap-3">
                 {CHINESE_STYLES.map((style) => (
                   <button
@@ -182,7 +261,12 @@ const App: React.FC = () => {
                   >
                     <img src={style.preview} alt={style.name} className="w-full aspect-square object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex items-end p-2">
-                      <span className="text-[10px] sm:text-xs text-white font-medium">{style.name}</span>
+                      <div className="flex flex-col items-start">
+                        <span className="text-[10px] sm:text-xs text-white font-medium">{style.name}</span>
+                        {style.keywords && (
+                          <span className="text-[8px] text-stone-300 font-light">{style.keywords}</span>
+                        )}
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -204,6 +288,16 @@ const App: React.FC = () => {
                 ))}
               </select>
             </section>
+
+            {userIntegral !== null && (
+              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  <span className="text-sm font-medium text-stone-600">剩余积分</span>
+                </div>
+                <span className="text-lg font-bold text-stone-900 font-serif-sc">{userIntegral}</span>
+              </div>
+            )}
 
             <button
               onClick={handleGenerate}

@@ -16,8 +16,8 @@ export async function transformRoomImage(
   const ai = new GoogleGenAI({ apiKey });
   
   const stylePrompts: Record<ChineseStyle, string> = {
-    [ChineseStyle.NEW_CHINESE]: "Modern Chinese style, clean lines, neutral colors, dark wood accents, elegant furniture, balanced composition.",
-    [ChineseStyle.CLASSICAL]: "Classical Chinese, rosewood furniture, intricate lattice screens, silk textures, symmetrical layout, traditional art.",
+    [ChineseStyle.NEW_CHINESE]: "关键词1, Modern Chinese style, clean lines, neutral colors, dark wood accents, elegant furniture, balanced composition.",
+    [ChineseStyle.CLASSICAL]: "关键词2, Classical Chinese, rosewood furniture, intricate lattice screens, silk textures, symmetrical layout, traditional art.",
     [ChineseStyle.ZEN_MINIMALISM]: "Zen style, bamboo, stone, light wood, simple furniture, peaceful atmosphere, natural lighting.",
     [ChineseStyle.LUXURY_ORIENTAL]: "Grand Oriental luxury, marble flooring, high ceilings, gold accents, premium wooden beams, expensive textures.",
     [ChineseStyle.AMERICAN]: "American style, cozy and comfortable, practical, casual elegance, solid wood furniture, fabric upholstery, warm tones.",

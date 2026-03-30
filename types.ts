@@ -20,6 +20,50 @@ export interface TransformationResult {
   timestamp: number;
 }
 
+export interface SaasUser {
+  name: string;
+  enterprise: string;
+  integral: number;
+}
+
+export interface SaasTool {
+  name: string;
+  integral: number;
+}
+
+export interface SaasLaunchResponse {
+  success: boolean;
+  data: {
+    user: SaasUser;
+    tool: SaasTool;
+  };
+}
+
+export interface SaasVerifyResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    currentIntegral: number;
+    requiredIntegral: number;
+  };
+}
+
+export interface SaasConsumeResponse {
+  success: boolean;
+  data: {
+    currentIntegral: number;
+    consumedIntegral: number;
+  };
+}
+
+export interface SaasInitData {
+  userId: string;
+  toolId: string;
+  context?: string;
+  prompt?: string[];
+  callbackUrl?: string;
+}
+
 declare global {
   interface Window {
     aistudio?: {
