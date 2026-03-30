@@ -1,0 +1,37 @@
+
+import { ChineseStyle } from './types';
+
+export const CHINESE_STYLES = [
+  {
+    id: ChineseStyle.NEW_CHINESE,
+    name: '新中式',
+    description: '将现代舒适感与传统的审美线条、材质完美融合。',
+    preview: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    id: ChineseStyle.CLASSICAL,
+    name: '古典中式',
+    description: '精致的木雕、花窗隔断和厚重的传统色调。',
+    preview: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    id: ChineseStyle.ZEN_MINIMALISM,
+    name: '禅意简约',
+    description: '宁静祥和的空间，专注于自然质感和光影表现。',
+    preview: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    id: ChineseStyle.LUXURY_ORIENTAL,
+    name: '东方奢华',
+    description: '大气恢弘的建筑元素，配以大理石、红木等顶级材质。',
+    preview: 'https://images.unsplash.com/photo-1616486029423-aaa47a958fd3?auto=format&fit=crop&q=80&w=400'
+  }
+];
+
+export const ROOM_TYPES = [
+  '客厅',
+  '卧室',
+  '餐厅',
+  '书房',
+  '茶室'
+];

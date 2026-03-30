@@ -1,0 +1,7 @@
+{
+  "name": "禅艺 AI 装修：中式室内设计师",
+  "description": "利用 AI 将您的毛坯房实拍图转换为精美的新中式装修效果。在不改变房屋主体结构的前提下，为您呈现优雅的传统与现代融合方案。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
