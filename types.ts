@@ -3,7 +3,9 @@ export enum ChineseStyle {
   NEW_CHINESE = '新中式',
   CLASSICAL = '古典中式',
   ZEN_MINIMALISM = '禅意简约',
-  LUXURY_ORIENTAL = '东方奢华'
+  LUXURY_ORIENTAL = '东方奢华',
+  AMERICAN = '美式',
+  EUROPEAN = '欧式'
 }
 
 export interface DesignConfig {

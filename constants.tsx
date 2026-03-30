@@ -25,6 +25,18 @@ export const CHINESE_STYLES = [
     name: '东方奢华',
     description: '大气恢弘的建筑元素，配以大理石、红木等顶级材质。',
     preview: 'https://images.unsplash.com/photo-1616486029423-aaa47a958fd3?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    id: ChineseStyle.AMERICAN,
+    name: '美式',
+    description: '温馨舒适，注重实用性与休闲感，常使用实木、布艺等材质。',
+    preview: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    id: ChineseStyle.EUROPEAN,
+    name: '欧式',
+    description: '华丽高贵，强调线形流动的变化，色彩华丽。',
+    preview: 'https://images.unsplash.com/photo-1600607687931-cebf5518b56d?auto=format&fit=crop&q=80&w=400'
   }
 ];
 
