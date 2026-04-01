@@ -9,8 +9,10 @@ export async function transformRoomImage(
   aspectRatio: string = "1:1",
   onProgress?: (status: string) => void
 ): Promise<string> {
-  // 使用平台默认提供的 GEMINI_API_KEY
-  const apiKey = process.env.GEMINI_API_KEY as string;
+  // 优先从 Vite 环境变量中读取 (支持 Vercel 部署)
+  const apiKey = (import.meta.env.VITE_GEMINI_API_KEY as string) || 
+                 (process.env.GEMINI_API_KEY as string) || 
+                 (process.env.VITE_GEMINI_API_KEY as string);
   if (!apiKey) {
     throw new Error("API Key is missing. Please check your environment variables.");
   }
