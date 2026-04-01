@@ -17,16 +17,18 @@ export const STYLE_PROMPTS: Record<string, string> = {
   [InteriorStyle.MODERN_MINIMALIST]: "Modern minimalist style, black white and gray, sleek lines, open space, functional furniture."
 };
 
+declare const __GEMINI_API_KEY__: string;
+
 export async function transformRoomImage(
   base64Image: string,
   style: string,
   aspectRatio: string = "1:1"
 ): Promise<string> {
-  // 生产环境 Vercel 必须使用 VITE_ 前缀，且在构建时注入
-  const apiKey = (process.env.VITE_GEMINI_API_KEY as string) || (process.env.GEMINI_API_KEY as string);
+  // 优先使用构建时注入的全局常量
+  const apiKey = __GEMINI_API_KEY__ || (import.meta as any).env.VITE_GEMINI_API_KEY;
   
   if (!apiKey) {
-    throw new Error("API Key 未配置。请在环境变量中设置 VITE_GEMINI_API_KEY。");
+    throw new Error("API Key 未配置。请在 Vercel 环境变量中设置 VITE_GEMINI_API_KEY 并重新部署。");
   }
 
   const ai = new GoogleGenAI({ apiKey });
