@@ -30,7 +30,13 @@ async function startServer() {
 
   // Proxy Request Helper
   const proxyRequest = async (req, res, targetPath) => {
-    const saasDomain = process.env.SAAS_DOMAIN || "https://your-saas-domain.com";
+    const saasDomain = process.env.SAAS_DOMAIN;
+    if (!saasDomain) {
+      return res.status(503).json({ 
+        success: false, 
+        message: "SaaS 域名未配置，请检查环境变量 SAAS_DOMAIN" 
+      });
+    }
     const targetUrl = `${saasDomain}${targetPath}`;
     try {
       const response = await axios({

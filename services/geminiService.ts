@@ -9,7 +9,8 @@ export async function transformRoomImage(
   aspectRatio: string = "1:1",
   onProgress?: (status: string) => void
 ): Promise<string> {
-  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+  // 使用平台默认提供的 GEMINI_API_KEY
+  const apiKey = process.env.GEMINI_API_KEY as string;
   if (!apiKey) {
     throw new Error("API Key is missing. Please check your environment variables.");
   }
