@@ -1,10 +1,10 @@
 
 import { GoogleGenAI } from "@google/genai";
-import { ChineseStyle } from "../types";
+import { InteriorStyle } from "../types";
 
 export async function transformRoomImage(
   base64Image: string,
-  style: ChineseStyle,
+  style: InteriorStyle,
   roomType: string,
   aspectRatio: string = "1:1",
   onProgress?: (status: string) => void
@@ -15,13 +15,17 @@ export async function transformRoomImage(
   }
   const ai = new GoogleGenAI({ apiKey });
   
-  const stylePrompts: Record<ChineseStyle, string> = {
-    [ChineseStyle.NEW_CHINESE]: "关键词1, Modern Chinese style, clean lines, neutral colors, dark wood accents, elegant furniture, balanced composition.",
-    [ChineseStyle.CLASSICAL]: "关键词2, Classical Chinese, rosewood furniture, intricate lattice screens, silk textures, symmetrical layout, traditional art.",
-    [ChineseStyle.ZEN_MINIMALISM]: "Zen style, bamboo, stone, light wood, simple furniture, peaceful atmosphere, natural lighting.",
-    [ChineseStyle.LUXURY_ORIENTAL]: "Grand Oriental luxury, marble flooring, high ceilings, gold accents, premium wooden beams, expensive textures.",
-    [ChineseStyle.AMERICAN]: "American style, cozy and comfortable, practical, casual elegance, solid wood furniture, fabric upholstery, warm tones.",
-    [ChineseStyle.EUROPEAN]: "European style, luxurious and elegant, ornate details, flowing lines, rich colors, classic moldings, crystal chandeliers."
+  const stylePrompts: Record<InteriorStyle, string> = {
+    [InteriorStyle.NEW_CHINESE]: "关键词1, Modern Chinese style, clean lines, neutral colors, dark wood accents, elegant furniture, balanced composition.",
+    [InteriorStyle.CLASSICAL]: "关键词2, Classical Chinese, rosewood furniture, intricate lattice screens, silk textures, symmetrical layout, traditional art.",
+    [InteriorStyle.LIGHT_LUXURY]: "Light luxury style, sophisticated, high-quality materials, metallic accents, velvet textures, refined elegance.",
+    [InteriorStyle.FRENCH]: "French style, romantic, elegant moldings, ornate details, soft color palette, vintage furniture, artistic atmosphere.",
+    [InteriorStyle.MEDITERRANEAN]: "American Mediterranean style, blue and white tones, arched doorways, natural textures, coastal vibe, rustic wood.",
+    [InteriorStyle.MID_CENTURY]: "Mid-century modern style, retro, walnut wood, iconic furniture designs, geometric patterns, warm organic tones.",
+    [InteriorStyle.PASTORAL]: "Pastoral style, rustic, floral patterns, natural wood, cozy atmosphere, warm colors, vintage charm.",
+    [InteriorStyle.NORDIC]: "Nordic style, Scandinavian, minimalist, light wood, bright spaces, clean lines, functional design.",
+    [InteriorStyle.AMERICAN]: "American style, cozy, spacious, solid wood furniture, classic comfort, warm lighting, traditional home feel.",
+    [InteriorStyle.MODERN_MINIMALIST]: "Modern minimalist style, black white and gray, sleek lines, open space, functional furniture, high contrast."
   };
 
   try {
@@ -34,7 +38,7 @@ export async function transformRoomImage(
 This is an image-to-image translation task. You MUST preserve the EXACT geometric structure, perspective, and layout of the provided input image. 
 Do NOT alter the position, size, or shape of any walls, windows, doors, beams, or columns. 
 
-Your ONLY task is to apply surface materials, textures, and lighting to the existing surfaces to transform this bare room into a fully furnished ${roomType} in the following style: ${stylePrompts[style]}
+Your ONLY task is to apply surface materials, textures, and lighting to the existing surfaces to transform this bare room into a fully furnished space in the following style: ${stylePrompts[style]}
 
 Execution Rules:
 1. NO STRUCTURAL CHANGES: The skeleton of the room must remain 100% identical to the input image. Absolutely no moving, adding, or deleting walls, columns, beams, doors, or windows.

@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ComparisonSlider from './components/ComparisonSlider';
-import { CHINESE_STYLES, ROOM_TYPES } from './constants';
-import { ChineseStyle, TransformationResult } from './types';
+import { INTERIOR_STYLES } from './constants';
+import { InteriorStyle, TransformationResult } from './types';
 import { transformRoomImage } from './services/geminiService';
 
 declare global {
@@ -18,8 +18,7 @@ declare global {
 const App: React.FC = () => {
   // UI State
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<ChineseStyle>(ChineseStyle.NEW_CHINESE);
-  const [selectedRoom, setSelectedRoom] = useState<string>(ROOM_TYPES[0]);
+  const [selectedStyle, setSelectedStyle] = useState<InteriorStyle>(InteriorStyle.NEW_CHINESE);
   const [imageAspectRatio, setImageAspectRatio] = useState<string>("1:1");
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState<TransformationResult | null>(null);
@@ -135,7 +134,7 @@ const App: React.FC = () => {
         }
       }
 
-      const resultUrl = await transformRoomImage(selectedImage, selectedStyle, selectedRoom, imageAspectRatio, (status) => {
+      const resultUrl = await transformRoomImage(selectedImage, selectedStyle, "空间", imageAspectRatio, (status) => {
         // Optional: you could add a progress state here if you want to show it in the UI
       });
       
@@ -205,7 +204,7 @@ const App: React.FC = () => {
     if (!result) return;
     const link = document.createElement('a');
     link.href = result.resultUrl;
-    link.download = `禅艺装修设计-${selectedStyle}-${selectedRoom}-${Date.now()}.png`;
+    link.download = `禅艺装修设计-${selectedStyle}-${Date.now()}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -247,46 +246,42 @@ const App: React.FC = () => {
           <div className="lg:col-span-4 space-y-8 order-2 lg:order-1">
             <section className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
               <h2 className="text-lg font-bold text-stone-900 mb-6 font-serif-sc">1. 选择装修风格A</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {CHINESE_STYLES.map((style) => (
+              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                {INTERIOR_STYLES.map((style) => (
                   <button
                     key={style.id}
                     onClick={() => {
                       setSelectedStyle(style.id);
                       if (result) setResult(null);
                     }}
-                    className={`relative rounded-xl overflow-hidden border-2 transition-all group ${
-                      selectedStyle === style.id ? 'border-stone-900 ring-4 ring-stone-900/10' : 'border-transparent hover:border-stone-200'
+                    className={`w-full flex items-center gap-4 p-3 rounded-xl border-2 transition-all text-left group ${
+                      selectedStyle === style.id 
+                        ? 'border-stone-900 bg-stone-50 ring-4 ring-stone-900/5' 
+                        : 'border-stone-100 bg-white hover:border-stone-200'
                     }`}
                   >
-                    <img src={style.preview} alt={style.name} className="w-full aspect-square object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex items-end p-2">
-                      <div className="flex flex-col items-start">
-                        <span className="text-[10px] sm:text-xs text-white font-medium">{style.name}</span>
+                    <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 border border-stone-100">
+                      <img src={style.preview} alt={style.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" referrerPolicy="no-referrer" />
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-bold text-stone-900 text-sm truncate">{style.name}</span>
                         {style.keywords && (
-                          <span className="text-[8px] text-stone-300 font-light">{style.keywords}</span>
+                          <span className="text-[9px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded uppercase tracking-wider font-bold whitespace-nowrap">
+                            {style.keywords}
+                          </span>
                         )}
                       </div>
+                      <p className="text-[11px] text-stone-500 line-clamp-1 leading-tight">{style.description}</p>
                     </div>
+                    {selectedStyle === style.id && (
+                      <div className="w-5 h-5 bg-stone-900 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
-            </section>
-
-            <section className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-              <h2 className="text-lg font-bold text-stone-900 mb-6 font-serif-sc">2. 空间类型</h2>
-              <select 
-                value={selectedRoom}
-                onChange={(e) => {
-                  setSelectedRoom(e.target.value);
-                  if (result) setResult(null);
-                }}
-                className="w-full bg-stone-50 border border-stone-200 rounded-lg px-4 py-3 text-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-900 transition-all font-medium"
-              >
-                {ROOM_TYPES.map(room => (
-                  <option key={room} value={room}>{room}</option>
-                ))}
-              </select>
             </section>
 
             {userIntegral !== null && (
@@ -334,7 +329,7 @@ const App: React.FC = () => {
               <div className="bg-white rounded-2xl shadow-sm border-2 border-dashed border-stone-200 aspect-[4/3] flex flex-col items-center justify-center p-8 transition-colors hover:border-stone-300 relative overflow-hidden group">
                 {selectedImage ? (
                   <div className="w-full h-full relative">
-                    <img src={selectedImage} alt="Preview" className="w-full h-full object-cover rounded-xl" />
+                    <img src={selectedImage} alt="Preview" className="w-full h-full object-cover rounded-xl" referrerPolicy="no-referrer" />
                     <button 
                       onClick={() => setSelectedImage(null)}
                       className="absolute top-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full shadow-lg hover:bg-white transition-colors text-stone-900"
@@ -376,7 +371,7 @@ const App: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="bg-stone-900 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">AI 智能设计</span>
-                      <h3 className="font-bold text-stone-900 font-serif-sc text-lg">{selectedStyle} - {selectedRoom}</h3>
+                      <h3 className="font-bold text-stone-900 font-serif-sc text-lg">{selectedStyle}</h3>
                     </div>
                     <p className="text-stone-500 text-sm italic">已严格保留原始建筑结构，并全面覆盖水泥表面。</p>
                   </div>
@@ -432,6 +427,7 @@ const App: React.FC = () => {
                     src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=alipay_payment_mock_100rmb" 
                     alt="支付宝收款码"
                     className="w-40 h-40"
+                    referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-white/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 cursor-pointer" onClick={handlePaymentSuccess}>
                     <p className="text-xs font-bold text-stone-900">模拟支付(点击完成)</p>
@@ -456,18 +452,6 @@ const App: React.FC = () => {
           </div>
         </div>
       )}
-
-      <footer className="bg-white border-t border-stone-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-stone-800 flex items-center justify-center rounded-sm">
-              <span className="text-white font-serif-sc text-sm">禅</span>
-            </div>
-            <span className="text-lg font-serif-sc font-bold tracking-tight">禅艺 AI 装修</span>
-          </div>
-          <p className="text-stone-500 text-sm">© 2024 禅艺空间视觉实验室。基于 Gemini 提供技术支持。</p>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -11,14 +11,6 @@ const Header: React.FC = () => {
           </div>
           <h1 className="text-xl font-serif-sc font-bold text-stone-900 tracking-tight">禅艺 AI 装修</h1>
         </div>
-        <nav className="hidden md:flex items-center space-x-8">
-          <a href="#" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">工作原理</a>
-          <a href="#" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">设计风格</a>
-          <a href="#" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">价格</a>
-          <button className="bg-stone-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-stone-800 transition-colors">
-            升级专业版
-          </button>
-        </nav>
       </div>
     </header>
   );

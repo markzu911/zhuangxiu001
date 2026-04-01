@@ -1,15 +1,19 @@
 
-export enum ChineseStyle {
+export enum InteriorStyle {
   NEW_CHINESE = '新中式',
   CLASSICAL = '古典中式',
-  ZEN_MINIMALISM = '禅意简约',
-  LUXURY_ORIENTAL = '东方奢华',
+  LIGHT_LUXURY = '轻奢风',
+  FRENCH = '法式',
+  MEDITERRANEAN = '美式地中海',
+  MID_CENTURY = '中古风',
+  PASTORAL = '田园风',
+  NORDIC = '北欧风',
   AMERICAN = '美式',
-  EUROPEAN = '欧式'
+  MODERN_MINIMALIST = '现代简约'
 }
 
 export interface DesignConfig {
-  style: ChineseStyle;
+  style: InteriorStyle;
   roomType: string;
   intensity: number;
 }

@@ -61,6 +61,7 @@ const ComparisonSlider: React.FC<ComparisonSliderProps> = ({ beforeUrl, afterUrl
         src={afterUrl} 
         alt="装修后" 
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        referrerPolicy="no-referrer"
       />
       
       {/* 装修前图像 (裁剪显示) */}
@@ -73,6 +74,7 @@ const ComparisonSlider: React.FC<ComparisonSliderProps> = ({ beforeUrl, afterUrl
           alt="毛坯房" 
           className="absolute inset-0 w-[100vw] h-full object-cover max-w-none"
           style={{ width: containerRef.current?.offsetWidth }}
+          referrerPolicy="no-referrer"
         />
         <div className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1.5 text-xs rounded-full uppercase tracking-widest font-bold backdrop-blur-sm">
           原图 (毛坯房)
